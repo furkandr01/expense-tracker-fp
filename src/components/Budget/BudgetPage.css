@@ -1,0 +1,11 @@
+.budget-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--clr-blue);
+    min-height: 100vh; 
+    overflow-y: auto; 
+  }
+  
+  
