@@ -46,3 +46,97 @@
   background-color: var(--clr-blue);
   border-radius: 100vh;
 }
+
+/* Modal Styles */
+.savingsmodal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(37, 37, 37, 0.132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.savingsmodal-content {
+    background-color: var(--clr-blue);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.savingsmodal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.savingsmodal-header h3 {
+    color: var(--color-white);
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--color-silver);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.savingsform-group {
+    margin-bottom: 1rem;
+}
+
+.savingsform-group label {
+    display: block;
+    color: var(--color-silver);
+    margin-bottom: 0.5rem;
+}
+
+.savingsform-group input[type="text"],
+.savingsform-group input[type="number"],
+.savingsform-group input[type="date"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--clr-lightblue);
+    background-color: var(--clr-lightblue);
+    color: var(--color-white);
+}
+
+.savingsmodal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.savingsmodal-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.savingsmodal-buttons button[type="button"] {
+    background-color: var(--color-jet);
+    color: var(--color-silver);
+}
+
+.savingsmodal-buttons button[type="submit"] {
+    background-color: var(--color-green);
+    color: var(--color-white);
+}
+
+.savingsmodal-buttons button:hover {
+    opacity: 0.9;
+}

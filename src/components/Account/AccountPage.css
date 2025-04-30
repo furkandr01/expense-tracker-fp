@@ -1,0 +1,60 @@
+.page-container {
+    margin: auto;
+    color: black;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto; 
+  }
+  
+  .users-info,
+  .account-actions {
+    background-color: #f4f4f4; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .user-info h3,
+  .account-actions h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .user-info p {
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  
+  .account-button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 1rem;
+    background-color:var(--clr-blue); 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .account-button:hover {
+    background-color: var(--clr-blue); 
+  }
+  

@@ -3,6 +3,29 @@
   display: flex;
   flex-direction: column;
 }
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: 400px;
+  padding-right: 0.5rem;
+}
+
+.cards-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cards-container::-webkit-scrollbar-track {
+  background: var(--clr-blue);
+}
+
+.cards-container::-webkit-scrollbar-thumb {
+  background: var(--clr-lightblue);
+  border-radius: 2px;
+}
+
 .grid-c1-content {
   background: linear-gradient(
       114.07deg,
@@ -13,6 +36,7 @@
   flex: 1;
   border-radius: 10px;
   padding: 16px;
+  min-width: 300px;
 }
 .grid-c1-content .lg-value {
   margin-top: 8px;
@@ -55,9 +79,113 @@
   background-color: var(--clr-yellow);
 }
 
+.grid-c1-content .card-owner {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.grid-c1-content .card-owner .text {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
 @media screen and (max-width: 768px) {
   .grid-c1 {
     grid-column-start: 1;
     grid-column-end: 3;
   }
+}
+
+/* Modal Styles */
+.cardsmodal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(37, 37, 37, 0.132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.cardsmodal-content {
+    background-color: var(--clr-blue);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cardsmodal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cardsmodal-header h3 {
+    color: var(--color-white);
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--color-silver);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.cardsform-group {
+    margin-bottom: 1rem;
+}
+
+.cardsform-group label {
+    display: block;
+    color: var(--color-silver);
+    margin-bottom: 0.5rem;
+}
+
+.cardsform-group input[type="text"],
+.cardsform-group input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--clr-lightblue);
+    background-color: var(--clr-lightblue);
+    color: var(--color-white);
+}
+
+.cardsmodal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cardsmodal-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.cardsmodal-buttons button[type="button"] {
+    background-color: var(--color-jet);
+    color: var(--color-silver);
+}
+
+.cardsmodal-buttons button[type="submit"] {
+    background-color: var(--color-green);
+    color: var(--color-white);
+}
+
+.cardsmodal-buttons button:hover {
+    opacity: 0.9;
 }

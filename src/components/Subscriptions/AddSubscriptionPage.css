@@ -1,0 +1,88 @@
+.add-subscription-page {
+  padding: 24px;
+  background-color: var(--clr-blue);
+  min-height: 100vh;
+  color: var(--clr-white);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--clr-white);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subscription-form {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: var(--clr-lightblue);
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid var(--clr-silver);
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+  font-size: 16px;
+}
+
+.form-group input::placeholder {
+  color: var(--clr-silver-v1);
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancel-button {
+  background-color: var(--clr-silver);
+  color: var(--clr-white);
+}
+
+.submit-button {
+  background-color: var(--clr-pumpkin);
+  color: var(--clr-white);
+} 

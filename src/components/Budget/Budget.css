@@ -1,41 +1,223 @@
-.grid-c4 .grid-c-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.grid-c4 {
+    display:flexbox ;
+    align-items:center;
+    justify-content: space-between;
 }
+
+.grid-c-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.grid-c-title-text {
+    font-size: 1.2rem;
+    color: var(--color-white);
+}
+
+.grid-c-title-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.grid-c-title-icon:hover {
+    background-color: var(--color-jet);
+}
+
+.grid-c-title-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.grid-c-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.lg-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
 .grid-c4-content {
-  margin-top: 20px;
-  border-radius: 16px;
+    margin-top: 20px;
+    border-radius: 16px;
+    padding: 20px;
 }
-.grid-c4 .grid-c4-content {
-  padding: 20px;
+
+.grid-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
-.grid-c4 .grid-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
+
+.grid-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
 }
-.grid-c4 .grid-item-l {
-  display: flex;
-  align-items: flex-start;
-  column-gap: 16px;
+
+.grid-item-l {
+    display: flex;
+    align-items: flex-start;
+    column-gap: 16px;
 }
-.grid-c4 .grid-item-l .icon {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
+
+.grid-item-l .icon {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
 }
-.grid-c4 .grid-item-l .icon img {
-  width: 20px;
+
+.grid-item-l .icon img {
+    width: 20px;
 }
-.grid-c4 .grid-item-l .text {
-  font-weight: 600;
+
+.grid-item-l .text {
+    font-weight: 600;
 }
-.grid-c4 .grid-item-l .text span {
-  font-weight: 300;
-  font-size: 15px;
-  display:block;
-  margin-top: 5px;
-  opacity: 0.9;
+
+.grid-item-l .text span {
+    font-weight: 300;
+    font-size: 15px;
+    display: block;
+    margin-top: 5px;
+    opacity: 0.9;
+}
+
+.grid-item-r {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.text-green {
+    color: var(--color-green);
+}
+
+.text-red {
+    color: var(--color-red);
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: var(--color-jet);
+}
+
+.delete-button img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Modal Styles */
+.budgetmodal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(37, 37, 37, 0.132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.budgetmodal-content {
+    background-color: var(--clr-blue);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.budgetmodal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.budgetmodal-header h3 {
+    color: var(--color-white);
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--color-silver);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.budgetform-group {
+    margin-bottom: 1rem;
+}
+
+.budgetform-group label {
+    display: block;
+    color: var(--color-silver);
+    margin-bottom: 0.5rem;
+}
+
+.budgetform-group input[type="text"],
+.budgetform-group input[type="number"],
+.budgetform-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--clr-lightblue);
+    background-color: var(--clr-lightblue);
+    color: var(--color-white);
+}
+
+.budgetform-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.budgetmodal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.budgetmodal-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.budgetmodal-buttons button[type="button"] {
+    background-color: var(--color-jet);
+    color: var(--color-silver);
+}
+
+.budgetmodal-buttons button[type="submit"] {
+    background-color: var(--color-green);
+    color: var(--color-white);
+}
+
+.budgetmodal-buttons button:hover {
+    opacity: 0.9;
 }

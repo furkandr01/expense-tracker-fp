@@ -14,7 +14,7 @@
   column-gap: 10px;
 }
 .grid-c5 .grid-item-l .icon {
-  background-color: rgb(254, 30, 0, 0.15);
+  background-color: rgba(175, 41, 20, 0.15);
   width: 32px;
   height: 32px;
   border-radius: 100%;
@@ -32,6 +32,122 @@
   color: black;
   font-size: 15px;
 }
+.grid-c5 .grid-item-r {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .grid-c5 .grid-item-r span {
   font-weight: 600;
+}
+
+.delete-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: rgba(117, 82, 255, 0.2);
+}
+
+.delete-button img {
+  width: 16px;
+  height: 16px;
+  filter: invert(50%) sepia(100%) saturate(1000%) hue-rotate(320deg) brightness(100%);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--clr-lightblue);
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  color: var(--clr-white);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--clr-white);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: var(--clr-white);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--clr-white);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--clr-silver);
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+}
+
+.form-group input::placeholder {
+  color: var(--clr-silver-v1);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-buttons button[type="button"] {
+  background-color: var(--clr-silver);
+  color: var(--clr-white);
+}
+
+.modal-buttons button[type="submit"] {
+  background-color: var(--clr-pumpkin);
+  color: var(--clr-white);
 }

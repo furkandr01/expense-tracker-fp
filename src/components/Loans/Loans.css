@@ -1,8 +1,75 @@
 /* grid c7 */
 .grid-c7-content {
-  margin-top: -42px;
-  margin-bottom: -128px;
+  margin-top: 20px;
+  background-color: var(--clr-darkblue);
+  border-radius: 8px;
+  padding: 16px;
 }
+
+.loan-data-list {
+  margin-top: 20px;
+  margin-right: 18px;
+  width: 100%;
+}
+
+.data-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: var(--clr-lightblue);
+  border-radius: 8px;
+}
+
+.data-item-info {
+  flex: 1;
+}
+
+.data-item-title {
+  display: block;
+  font-weight: 600;
+  color: var(--clr-white);
+  margin-bottom: 4px;
+}
+
+.data-item-value {
+  color: var(--clr-pumpkin);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.data-item-details {
+  display: flex;
+  gap: 16px;
+  color: var(--clr-silver-v1);
+  font-size: 14px;
+}
+
+.data-item-details span {
+  display: inline-block;
+}
+
+.grid-c-title-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-c-title-icon:hover {
+  opacity: 0.8;
+}
+
+.grid-c-title-icon img {
+  width: 24px;
+  height: 24px;
+}
+
 .progress-bar {
   display: flex;
   align-items: center;
@@ -21,7 +88,7 @@
   width: 100%;
   height: 100%;
   fill: none;
-  stroke: var(--clr-jet);
+  stroke: var(--clr-blue);
   stroke-width: 20;
   stroke-linecap: round;
 }
@@ -55,7 +122,7 @@
   margin-left: -46px;
 }
 .grid-c7-content .data-list {
-  margin-left: -20px;
+  margin-left: 20px;
 }
 .grid-c7-content .data-item {
   margin-bottom: 20px;
@@ -64,4 +131,249 @@
   margin-top: 8px;
   display: block;
   font-weight: 600;
+}
+
+.loans-page {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.loans-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.loans-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.loans-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.add-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.loans-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.loan-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.loan-info h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.loan-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.delete-button {
+  background-color: rgba(255, 82, 82, 0.1);
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: rgba(255, 82, 82, 0.2);
+}
+
+.delete-button img {
+  width: 16px;
+  height: 16px;
+  filter: invert(50%) sepia(100%) saturate(1000%) hue-rotate(320deg) brightness(100%);
+}
+
+/* Add Loan Form Styles */
+.add-loan-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--clr-white);
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--clr-blue);
+  border-radius: 4px;
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--clr-pumpkin);
+}
+
+.form-group input::placeholder {
+  color: var(--clr-silver-v1);
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--clr-pumpkin);
+  color: var(--clr-white);
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  opacity: 0.9;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--clr-primary);
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  color: var(--clr-white);
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: var(--clr-white);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--clr-white);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--clr-blue);
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--clr-pumpkin);
+}
+
+.form-group input::placeholder {
+  color: var(--clr-silver-v1);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-buttons button[type="button"] {
+  background-color: var(--clr-blue);
+  color: var(--clr-white);
+}
+
+.modal-buttons button[type="submit"] {
+  background-color: var(--clr-pumpkin);
+  color: var(--clr-white);
 }

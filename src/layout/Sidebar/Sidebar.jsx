@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { personsImgs } from '../../utils/images';
 import { navigationLinks } from '../../data/data';
-import "./Sidebar.css";
+import './Sidebar.css';
 import { useContext } from 'react';
 import { SidebarContext } from '../../context/sidebarContext';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Link yerine NavLink kullandık
 
 const Sidebar = () => {
-  const [activeLinkIdx] = useState(1);
-  const [sidebarClass, setSidebarClass] = useState("");
+  const [sidebarClass, setSidebarClass] = useState('');
   const { isSidebarOpen } = useContext(SidebarContext);
 
   useEffect(() => {
-    if(isSidebarOpen){
+    if (isSidebarOpen) {
       setSidebarClass('sidebar-change');
     } else {
       setSidebarClass('');
@@ -20,33 +19,36 @@ const Sidebar = () => {
   }, [isSidebarOpen]);
 
   return (
-    <div className={ `sidebar ${sidebarClass}` }>
+    <div className={`sidebar ${sidebarClass}`}>
       <div className="user-info">
-          <div className="info-img img-fit-cover">
-              <img src={ personsImgs.person_two } alt="profile image" />
-          </div>
-          <span className="info-name">Furkan ADAR</span>
+        <div className="info-img img-fit-cover">
+          <img src={personsImgs.person_two} alt="profile image" />
+        </div>
+        <span className="info-name">Furkan ADAR</span>
       </div>
 
       <nav className="navigation">
-          <ul className="nav-list">
-            {
-              navigationLinks.map((navigationLink) => (
-                <li className="nav-item" key = { navigationLink.id }>
-                  <Link
-                    to={`/${navigationLink.title.toLowerCase().replace(/\s+/g, '-')}`}
-                    className={`nav-link ${navigationLink.id === activeLinkIdx ? 'active' : ''}`}
-                  >
-                      <img src={ navigationLink.image } className="nav-link-icon" alt = { navigationLink.title } />
-                      <span className="nav-link-text">{ navigationLink.title }</span>
-                  </Link>
-                </li>
-              ))
-            }
-          </ul>
+        <ul className="nav-list">
+          {navigationLinks.map((navigationLink) => (
+            <li className="nav-item" key={navigationLink.id}>
+              <NavLink
+                to={`/${navigationLink.title.toLowerCase().replace(/\s+/g, '-')}`}
+                className="nav-link"
+                activeClassName="active" // Aktif bağlantı için otomatik sınıf
+              >
+                <img
+                  src={navigationLink.image}
+                  className="nav-link-icon"
+                  alt={navigationLink.title}
+                />
+                <span className="nav-link-text">{navigationLink.title}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </nav>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

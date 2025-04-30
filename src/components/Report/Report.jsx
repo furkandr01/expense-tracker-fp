@@ -1,41 +1,69 @@
 import { iconsImgs } from "../../utils/images";
 import "./Report.css";
-import { reportData } from "../../data/data";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import CreateReportModal from "./CreateReportModal";
 
 const Report = () => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleClick = () => {
+    navigate('/reports');
+  };
+
+  const handleAddClick = (e) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreateReport = (reportData) => {
+    // Here you would typically make an API call to create the report
+    console.log('Creating report with data:', reportData);
+    setIsModalOpen(false);
+    // Navigate to the report details page with the new report
+    navigate(`/reports/${reportData.category}`, { state: reportData });
+  };
+
   return (
-    <div className="grid-one-item grid-common grid-c3">
+    <>
+      <div className="grid-one-item grid-common grid-c3" onClick={handleClick} style={{ cursor: 'pointer' }}>
         <div className="grid-c-title">
-            <h3 className="grid-c-title-text">Report</h3>
-            <button className="grid-c-title-icon">
-                <img src={ iconsImgs.plus } />
-            </button>
+          <h3 className="grid-c-title-text">Report</h3>
+          <button className="grid-c-title-icon" onClick={handleAddClick}>
+            <img src={iconsImgs.plus} alt="add" />
+          </button>
         </div>
         <div className="grid-c3-content">
-            <div className="grid-chart">
-                <div className="chart-vert-value">
-                    <span>100</span>
-                    <span>75</span>
-                    <span>50</span>
-                    <span>25</span>
-                    <span>0</span>
+          <div className="grid-items">
+            <div className="grid-item">
+              <div className="grid-item-l">
+                <div className="icon">
+                  <img src={iconsImgs.check} alt="check" />
                 </div>
-                {
-                    reportData.map((report) => (
-                        <div className="grid-chart-bar" key={report.id}>
-                            <div className="bar-wrapper">
-                                <div className="bar-item1" style={{ height: `${report.value1 !== null ? "40%" : ""}` }}></div>
-                                <div className="bar-item2" style={{ height: `${report.value2 !== null ? "60%" : ""}` }}></div>
-                            </div>
-                            <span className="grid-hortz-value">Jan</span>
-                        </div>
-                    ))
-                }
-                
+                <div className="text text-silver-v1">
+                  <p className="text">Income</p>
+                  <p className="text-sm">Today, 3:30 PM</p>
+                </div>
+              </div>
+              <div className="grid-item-r">
+                <span className="text-green">+ ₺ 150</span>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-  )
-}
+      </div>
+      <CreateReportModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleCreateReport}
+      />
+    </>
+  );
+};
 
-export default Report
+export default Report;

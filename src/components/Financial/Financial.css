@@ -4,3 +4,137 @@
   background-color: var(--clr-pumpkin);
   border-radius: 100vh;
 }
+
+.grid-c8 .grid-item .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background-color: var(--clr-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-c8 .grid-item-l {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.grid-c8 .grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.grid-c8 .grid-item-r {
+    font-weight: 600;
+}
+
+.view-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.view-button:hover {
+    background-color: var(--clr-lightblue);
+}
+
+/* Modal Styles */
+.financialmodal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(37, 37, 37, 0.132);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.financialmodal-content {
+    background-color: var(--clr-blue);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.financialmodal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.financialmodal-header h3 {
+    color: var(--color-white);
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--color-silver);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.financialform-group {
+    margin-bottom: 1rem;
+}
+
+.financialform-group label {
+    display: block;
+    color: var(--color-silver);
+    margin-bottom: 0.5rem;
+}
+
+.financialform-group input[type="text"],
+.financialform-group input[type="url"],
+.financialform-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--clr-lightblue);
+    background-color: var(--clr-lightblue);
+    color: var(--color-white);
+}
+
+.financialmodal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.financialmodal-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.financialmodal-buttons button[type="button"] {
+    background-color: var(--color-jet);
+    color: var(--color-silver);
+}
+
+.financialmodal-buttons button[type="submit"] {
+    background-color: var(--color-green);
+    color: var(--color-white);
+}
+
+.financialmodal-buttons button:hover {
+    opacity: 0.9;
+}

@@ -131,7 +131,7 @@ export const savings = [
         image: personsImgs.person_two,
         saving_amount: 250000,
         title: "Buy foreign currency",
-        date_taken: "23/12/23",
-        amount_left: 40000
+        date_taken: "23/12/24",
+        amount_left: 50000
     }
 ]
