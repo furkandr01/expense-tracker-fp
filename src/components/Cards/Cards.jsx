@@ -1,20 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { iconsImgs } from "../../utils/images";
 import "./Cards.css";
 import { useNavigate } from "react-router-dom";
+import { cardService } from "../../services/api";
 
 const Cards = () => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [cards, setCards] = useState([
-    {
-      id: 1,
-      ownerName: 'Furkan ADAR',
-      cardNumber: '**** **** **** 3456',
-      expiryDate: '12/28',
-      balance: 225000
-    }
-  ]);
+  const [cards, setCards] = useState([]);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [newCard, setNewCard] = useState({
     ownerName: '',
     cardNumber: '',
@@ -39,29 +34,91 @@ const Cards = () => {
     }));
   };
 
-  const handleAddNewCard = (e) => {
+  const fetchCards = async () => {
+    try {
+      const response = await cardService.getCards();
+      setCards(response.data);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+      setError('Failed to fetch cards');
+    }
+  };
+
+  const handleAddNewCard = async (e) => {
     e.preventDefault();
+    setError('');
+    setMessage('');
+
+    if (!newCard.ownerName?.trim()) {
+      setError('Owner name is required');
+      return;
+    }
+
+    if (!newCard.cardNumber?.trim()) {
+      setError('Card number is required');
+      return;
+    }
+
+    if (!newCard.expiryDate?.trim()) {
+      setError('Expiry date is required');
+      return;
+    }
+
+    if (!newCard.balance || parseFloat(newCard.balance) < 0) {
+      setError('Balance must be a valid amount');
+      return;
+    }
+
     const cardNumber = newCard.cardNumber.replace(/\s/g, '');
     const lastFourDigits = cardNumber.slice(-4);
     const maskedNumber = '**** **** **** ' + lastFourDigits;
     
     const newCardData = {
-      id: Date.now(),
-      ownerName: newCard.ownerName,
+      ownerName: newCard.ownerName.trim(),
       cardNumber: maskedNumber,
-      expiryDate: newCard.expiryDate,
-      balance: parseFloat(newCard.balance)
+      expiryDate: newCard.expiryDate.trim(),
+      balance: parseFloat(newCard.balance),
+      cardType: 'credit'
     };
 
-    setCards(prev => [...prev, newCardData]);
-    setNewCard({
-      ownerName: '',
-      cardNumber: '',
-      expiryDate: '',
-      balance: ''
-    });
-    setShowAddModal(false);
+    try {
+      await cardService.createCard(newCardData);
+      setMessage('Card created successfully');
+      
+      // Reset form and close modal
+      setNewCard({
+        ownerName: '',
+        cardNumber: '',
+        expiryDate: '',
+        balance: ''
+      });
+      setShowAddModal(false);
+
+      // Refresh cards list
+      await fetchCards();
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to create card';
+      setError(errorMessage);
+      console.error('Error creating card:', error);
+    }
   };
+
+  const handleDeleteCard = async (id) => {
+    try {
+      await cardService.deleteCard(id);
+      setMessage('Card deleted successfully');
+      
+      // Refresh cards list
+      await fetchCards();
+    } catch (error) {
+      setError('Failed to delete card');
+      console.error('Error deleting card:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCards();
+  }, []);
 
   return (
     <div className="grid-one-item grid-common grid-c1" onClick={handleClick} style={{ cursor: 'pointer' }}>
@@ -71,26 +128,37 @@ const Cards = () => {
                 <img src={iconsImgs.plus} alt="add" />
             </button>
         </div>
+        {error && <div className="error-message">{error}</div>}
+        {message && <div className="success-message">{message}</div>}
         <div className="cards-container">
           {cards.map((card) => (
-            <div key={card.id} className="grid-c1-content">
+            <div key={card._id} className="grid-c1-content">
               <p>Balance</p>
-              <div className="lg-value">₺ {card.balance.toLocaleString()}</div>
+              <div className="lg-value">₺ {card.balance ? card.balance.toLocaleString() : '0'}</div>
               <div className="card-wrapper">
-                <span className="card-pin-hidden">{card.cardNumber}</span>
+                <span className="card-pin-hidden">{card.cardNumber || 'No card number'}</span>
               </div>
               <div className="card-owner">
-                <p className="text text-white">{card.ownerName}</p>
+                <p className="text text-white">{card.ownerName || 'Card Owner'}</p>
               </div>
               <div className="card-logo-wrapper">
                 <div>
                   <p className="text text-silver-v1 expiry-text">Expires</p>
-                  <p className="text text-sm text-white">{card.expiryDate}</p>
+                  <p className="text text-sm text-white">{card.expiryDate || 'N/A'}</p>
                 </div>
                 <div className="card-logo">
                   <div className="logo-shape1"></div>
                   <div className="logo-shape2"></div>
                 </div>
+                <button 
+                  className="delete-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteCard(card._id);
+                  }}
+                >
+                  <img src={iconsImgs.trashbin} alt="delete" />
+                </button>
               </div>
             </div>
           ))}

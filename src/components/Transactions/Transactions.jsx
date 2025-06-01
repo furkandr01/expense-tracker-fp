@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Transactions.css";
 import { transactions } from "../../data/data";
-import { iconsImgs } from "../../utils/images";
+import { iconsImgs, personsImgs } from "../../utils/images";
 import { useNavigate } from "react-router-dom";
+import { transactionService } from "../../services/api";
 
 const Transactions = () => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [transactionList, setTransactionList] = useState(transactions);
+  const [transactionList, setTransactionList] = useState([]);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [newTransaction, setNewTransaction] = useState({
     name: '',
     date: '',
     amount: '',
     type: 'expense',
+    category: 'other',
     image: iconsImgs.user1
   });
 
@@ -33,27 +37,86 @@ const Transactions = () => {
     }));
   };
 
-  const handleAddNewTransaction = (e) => {
+  const fetchTransactions = async () => {
+    try {
+      const response = await transactionService.getTransactions();
+      setTransactionList(response.data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+      setError('Failed to fetch transactions');
+    }
+  };
+
+  const handleAddNewTransaction = async (e) => {
     e.preventDefault();
+    setError('');
+    setMessage('');
+
+    if (!newTransaction.name.trim()) {
+      setError('Name is required');
+      return;
+    }
+
+    if (!newTransaction.amount || parseFloat(newTransaction.amount) <= 0) {
+      setError('Amount must be greater than 0');
+      return;
+    }
+
+    if (!newTransaction.category) {
+      setError('Category is required');
+      return;
+    }
+
     const newTransactionData = {
-      id: Date.now(),
-      name: newTransaction.name,
+      title: newTransaction.name.trim(),
       date: newTransaction.date,
       amount: parseFloat(newTransaction.amount),
       type: newTransaction.type,
+      category: newTransaction.category,
+      description: '',
       image: newTransaction.image
     };
 
-    setTransactionList(prev => [...prev, newTransactionData]);
-    setNewTransaction({
-      name: '',
-      date: '',
-      amount: '',
-      type: 'expense',
-      image: iconsImgs.user1
-    });
-    setShowAddModal(false);
+    try {
+      const response = await transactionService.createTransaction(newTransactionData);
+      setMessage('Transaction created successfully');
+      
+      // Reset form and close modal
+      setNewTransaction({
+        name: '',
+        date: '',
+        amount: '',
+        type: 'expense',
+        category: 'other',
+        image: iconsImgs.user1
+      });
+      setShowAddModal(false);
+
+      // Refresh transactions list
+      await fetchTransactions();
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to create transaction';
+      setError(errorMessage);
+      console.error('Error creating transaction:', error);
+    }
   };
+
+  const handleDeleteTransaction = async (id) => {
+    try {
+      await transactionService.deleteTransaction(id);
+      setMessage('Transaction deleted successfully');
+      
+      // Refresh transactions list
+      await fetchTransactions();
+    } catch (error) {
+      setError('Failed to delete transaction');
+      console.error('Error deleting transaction:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   return (
     <div className="grid-one-item grid-common grid-c2" onClick={handleClick} style={{ cursor: 'pointer' }}>
@@ -64,21 +127,32 @@ const Transactions = () => {
             </button>
         </div>
         <div className="grid-c2-content">
+            {error && <div className="error-message">{error}</div>}
+            {message && <div className="success-message">{message}</div>}
             <div className="grid-items">
                 {transactionList.map((transaction) => (
-                    <div className="grid-item" key={transaction.id}>
-                        <div className="grid-item-l">
-                            <div className="avatar img-fit-cover">
-                                <img src={transaction.image} alt="" />
+                    <div className="grid-item" key={transaction._id}>
+                            <div className="grid-item-l">
+                                <div className="avatar img-fit-cover">
+                                <img src={personsImgs.person_one} alt="user" />
                             </div>
                             <div className="text text-silver-v1">
-                                <p className="text">{transaction.name} <span>{transaction.date}</span></p>
+                                <p className="text">{transaction.title} <span>{new Date(transaction.date).toLocaleDateString('tr-TR', {year: 'numeric', month: '2-digit', day: '2-digit'})}</span></p>
                             </div>
                         </div>
                         <div className="grid-item-r">
                             <span className={transaction.type === 'income' ? 'text-green' : 'text-scarlet'}>
                                 {transaction.type === 'income' ? '+' : '-'}₺ {transaction.amount}
                             </span>
+                            <button 
+                              className="delete-button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteTransaction(transaction._id);
+                              }}
+                            >
+                              <img src={iconsImgs.trashbin} alt="delete" />
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -140,6 +214,33 @@ const Transactions = () => {
                             >
                                 <option value="expense">Expense</option>
                                 <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div className="transactionform-group">
+                            <label>Category</label>
+                            <select
+                                name="category"
+                                value={newTransaction.category}
+                                onChange={handleNewTransactionChange}
+                                required
+                            >
+                                {newTransaction.type === 'income' ? (
+                                    <>
+                                        <option value="salary">Salary</option>
+                                        <option value="investment">Investment</option>
+                                        <option value="gift">Gift</option>
+                                        <option value="other">Other</option>
+                                    </>
+                                ) : (
+                                    <>
+                                        <option value="food">Food</option>
+                                        <option value="transportation">Transportation</option>
+                                        <option value="housing">Housing</option>
+                                        <option value="utilities">Utilities</option>
+                                        <option value="entertainment">Entertainment</option>
+                                        <option value="other">Other</option>
+                                    </>
+                                )}
                             </select>
                         </div>
                         <div className="transactionmodal-buttons">

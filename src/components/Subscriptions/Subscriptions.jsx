@@ -1,18 +1,39 @@
-import { useState } from "react";
-import { subscriptions } from "../../data/data"
+import { useState, useEffect } from "react";
 import { iconsImgs } from "../../utils/images"
 import "./Subscriptions.css";
 import { useNavigate } from "react-router-dom";
+import { subscriptionService } from "../../services/api";
+import { formatDate } from "../../utils/helpers";
 
 const Subscriptions = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subscriptionsList, setSubscriptionsList] = useState(subscriptions);
+  const [subscriptionsList, setSubscriptionsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
-    due_date: '',
-    amount: ''
+    frequency: 'monthly',
+    amount: '',
+    category: 'streaming',
+    startDate: formatDate(new Date()),
+    nextBillingDate: formatDate(new Date())
   });
+
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await subscriptionService.getSubscriptions();
+        setSubscriptionsList(response.data);
+      } catch (error) {
+        console.error("Error fetching subscriptions:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSubscriptions();
+  }, []);
 
   const handleClick = () => {
     navigate('/subscriptions');
@@ -20,7 +41,7 @@ const Subscriptions = () => {
 
   const handleAddClick = (e) => {
     e.stopPropagation();
-    setIsModalOpen(true);
+    navigate('/subscriptions/add');
   };
 
   const handleChange = (e) => {
@@ -31,21 +52,36 @@ const Subscriptions = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newSubscription = {
-      ...formData,
-      id: Date.now(),
-      amount: parseFloat(formData.amount)
-    };
-    setSubscriptionsList(prev => [...prev, newSubscription]);
-    setFormData({ title: '', due_date: '', amount: '' });
-    setIsModalOpen(false);
+    try {
+      const response = await subscriptionService.createSubscription({
+        ...formData,
+        amount: parseFloat(formData.amount)
+      });
+      setSubscriptionsList(prev => [...prev, response.data]);
+      setFormData({
+        title: '',
+        frequency: 'monthly',
+        amount: '',
+        category: 'streaming',
+        startDate: formatDate(new Date()),
+        nextBillingDate: formatDate(new Date())
+      });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+    }
   };
 
-  const handleDelete = (e, subscriptionId) => {
-    e.stopPropagation(); // Prevent navigation when clicking delete
-    setSubscriptionsList(prev => prev.filter(sub => sub.id !== subscriptionId));
+  const handleDelete = async (e, subscriptionId) => {
+    e.stopPropagation();
+    try {
+      await subscriptionService.deleteSubscription(subscriptionId);
+      setSubscriptionsList(prev => prev.filter(sub => sub._id !== subscriptionId));
+    } catch (error) {
+      console.error("Error deleting subscription:", error);
+    }
   };
 
   return (
@@ -57,29 +93,40 @@ const Subscriptions = () => {
             </button>
         </div>
         <div className="grid-c5-content">
-            <div className="grid-items">
-                {
+            {isLoading ? (
+              <div className="loading">Loading subscriptions...</div>
+            ) : (
+              <div className="grid-items">
+                  {subscriptionsList.length === 0 ? (
+                    <div className="empty-message">No subscriptions found. Add your first subscription!</div>
+                  ) : (
                     subscriptionsList.map((subscription) => (
-                        <div className="grid-item" key = {subscription.id}>
+                        <div className="grid-item" key={subscription._id}>
                             <div className="grid-item-l">
                                 <div className="icon">
                                     <img src={ iconsImgs.alert } />
                                 </div>
-                                <p className="text text-silver-v1">{ subscription.title } <span>due { subscription.due_date }</span></p>
+                                <p className="text text-silver-v1">
+                                  {subscription.title} 
+                                  <span>
+                                    {subscription.category} - {subscription.frequency}
+                                  </span>
+                                </p>
                             </div>
                             <div className="grid-item-r">
-                                <span className="text-silver-v1">₺ { subscription.amount }</span>
+                                <span className="text-silver-v1">₺ {subscription.amount}</span>
                                 <button 
                                     className="delete-button"
-                                    onClick={(e) => handleDelete(e, subscription.id)}
+                                    onClick={(e) => handleDelete(e, subscription._id)}
                                 >
                                     <img src={iconsImgs.trashbin} alt="Delete" />
                                 </button>
                             </div>
                         </div>
                     ))
-                }
-            </div>
+                  )}
+              </div>
+            )}
         </div>
         {isModalOpen && (
             <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
@@ -102,17 +149,6 @@ const Subscriptions = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="due_date">Due Date</label>
-                            <input
-                                type="date"
-                                id="due_date"
-                                name="due_date"
-                                value={formData.due_date}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
                             <label htmlFor="amount">Amount (₺)</label>
                             <input
                                 type="number"
@@ -124,6 +160,59 @@ const Subscriptions = () => {
                                 step="0.01"
                                 required
                                 placeholder="0.00"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="category">Category</label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="streaming">Streaming</option>
+                                <option value="software">Software</option>
+                                <option value="gym">Gym</option>
+                                <option value="magazine">Magazine</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="frequency">Billing Frequency</label>
+                            <select
+                                id="frequency"
+                                name="frequency"
+                                value={formData.frequency}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="startDate">Start Date</label>
+                            <input
+                                type="date"
+                                id="startDate"
+                                name="startDate"
+                                value={formData.startDate}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="nextBillingDate">Next Billing Date</label>
+                            <input
+                                type="date"
+                                id="nextBillingDate"
+                                name="nextBillingDate"
+                                value={formData.nextBillingDate}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className="modal-buttons">

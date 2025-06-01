@@ -6,53 +6,57 @@ const cardSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  ownerName: {
+    type: String,
+    required: [true, 'Please provide card owner name'],
+    trim: true
+  },
   cardNumber: {
     type: String,
     required: [true, 'Please provide a card number'],
     trim: true
   },
-  cardHolder: {
-    type: String,
-    required: [true, 'Please provide card holder name'],
-    trim: true
-  },
   expiryDate: {
-    type: Date,
+    type: String,
     required: true
   },
-  cvv: {
+  balance: {
+    type: Number,
+    default: 0
+  },
+  cardType: {
+    type: String,
+    enum: ['credit', 'debit'],
+    default: 'credit'
+  },
+  /* cvv: {
     type: String,
     required: [true, 'Please provide CVV'],
     trim: true
-  },
-  type: {
-    type: String,
-    enum: ['credit', 'debit'],
-    required: true
-  },
-  bank: {
+  }, */
+  /* bank: {
     type: String,
     required: [true, 'Please provide bank name'],
     trim: true
-  },
-  limit: {
+  }, */
+  /* limit: {
     type: Number,
     required: function() {
       return this.type === 'credit';
     }
-  },
-  currentBalance: {
+  }, */
+  /* currentBalance: {
     type: Number,
     default: 0
-  },
-  isActive: {
+  }, */
+  /* isActive: {
     type: Boolean,
     default: true
-  },
-  createdAt: {
+  }, */
+  /* createdAt: {
     type: Date,
     default: Date.now
-  }
+  } */
 });
 
 module.exports = mongoose.model('Card', cardSchema); 

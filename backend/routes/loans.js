@@ -7,7 +7,7 @@ const { protect } = require('../middleware/auth');
 // @desc    Get all loans for a user
 router.get('/', protect, async (req, res) => {
   try {
-    const loans = await Loan.find({ user: req.user._id });
+    const loans = await Loan.find({ user: req.user.id });
     res.json(loans);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -24,25 +24,37 @@ router.post('/', protect, async (req, res) => {
       interestRate,
       term,
       startDate,
+      endDate,
+      monthlyPayment,
       lender,
-      type,
       status
     } = req.body;
 
+    // Validate required fields
+    if (!title) return res.status(400).json({ message: 'Title is required' });
+    if (!amount) return res.status(400).json({ message: 'Amount is required' });
+    if (!interestRate) return res.status(400).json({ message: 'Interest rate is required' });
+    if (!term) return res.status(400).json({ message: 'Term is required' });
+    if (!startDate) return res.status(400).json({ message: 'Start date is required' });
+    if (!endDate) return res.status(400).json({ message: 'End date is required' });
+    if (!monthlyPayment) return res.status(400).json({ message: 'Monthly payment is required' });
+
     const loan = await Loan.create({
-      user: req.user._id,
+      user: req.user.id,
       title,
       amount,
       interestRate,
       term,
       startDate,
-      lender,
-      type,
-      status
+      endDate,
+      monthlyPayment,
+      lender: lender || 'Bank',
+      status: status || 'active'
     });
 
     res.status(201).json(loan);
   } catch (error) {
+    console.error('Loan creation error:', error);
     res.status(400).json({ message: error.message });
   }
 });
@@ -57,14 +69,14 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Loan not found' });
     }
 
-    if (loan.user.toString() !== req.user._id.toString()) {
+    if (loan.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
     const updatedLoan = await Loan.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     res.json(updatedLoan);
@@ -83,11 +95,11 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Loan not found' });
     }
 
-    if (loan.user.toString() !== req.user._id.toString()) {
+    if (loan.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
-    await loan.remove();
+    await loan.deleteOne();
     res.json({ message: 'Loan removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -105,12 +117,18 @@ router.put('/:id/payment', protect, async (req, res) => {
       return res.status(404).json({ message: 'Loan not found' });
     }
 
-    if (loan.user.toString() !== req.user._id.toString()) {
+    if (loan.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
+    // Initialize payments array if it doesn't exist
+    if (!loan.payments) {
+      loan.payments = [];
+      loan.paidAmount = 0;
+    }
+
     loan.payments.push({ amount, date });
-    loan.paidAmount += amount;
+    loan.paidAmount = (loan.paidAmount || 0) + Number(amount);
     
     if (loan.paidAmount >= loan.amount) {
       loan.status = 'paid';

@@ -1,28 +1,45 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./AddSubscriptionPage.css";
+import { subscriptionService } from '../../services/api';
+import { formatDate } from '../../utils/helpers';
 
 const AddSubscriptionPage = () => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    due_date: '',
-    amount: ''
+    amount: '',
+    category: 'streaming',
+    frequency: 'monthly',
+    startDate: formatDate(new Date()),
+    nextBillingDate: formatDate(new Date()),
+    isActive: true
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically save the subscription to your backend
-    console.log('New subscription:', formData);
-    navigate('/subscriptions');
+    try {
+      setIsSubmitting(true);
+      await subscriptionService.createSubscription({
+        ...formData,
+        amount: parseFloat(formData.amount)
+      });
+      navigate('/subscriptions');
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+      alert('Failed to create subscription. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -45,17 +62,6 @@ const AddSubscriptionPage = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="due_date">Due Date</label>
-          <input
-            type="date"
-            id="due_date"
-            name="due_date"
-            value={formData.due_date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
           <label htmlFor="amount">Amount (₺)</label>
           <input
             type="number"
@@ -69,9 +75,76 @@ const AddSubscriptionPage = () => {
             placeholder="0.00"
           />
         </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          >
+            <option value="streaming">Streaming</option>
+            <option value="software">Software</option>
+            <option value="gym">Gym</option>
+            <option value="magazine">Magazine</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="frequency">Billing Frequency</label>
+          <select
+            id="frequency"
+            name="frequency"
+            value={formData.frequency}
+            onChange={handleChange}
+            required
+          >
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="startDate">Start Date</label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="nextBillingDate">Next Billing Date</label>
+          <input
+            type="date"
+            id="nextBillingDate"
+            name="nextBillingDate"
+            value={formData.nextBillingDate}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group checkbox-group">
+          <label htmlFor="isActive">
+            <input
+              type="checkbox"
+              id="isActive"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+            />
+            Active Subscription
+          </label>
+        </div>
         <div className="form-buttons">
           <button type="button" className="cancel-button" onClick={() => navigate('/subscriptions')}>Cancel</button>
-          <button type="submit" className="submit-button">Add Subscription</button>
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Adding...' : 'Add Subscription'}
+          </button>
         </div>
       </form>
     </div>

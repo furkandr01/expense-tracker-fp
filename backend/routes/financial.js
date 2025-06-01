@@ -76,7 +76,7 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
-    await financialAdvice.remove();
+    await financialAdvice.deleteOne();
     res.json({ message: 'Financial advice entry removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });

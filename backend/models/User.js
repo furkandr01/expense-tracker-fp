@@ -9,6 +9,14 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: 3
   },
+  firstName: {
+    type: String,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    trim: true
+  },
   email: {
     type: String,
     required: [true, 'Please provide an email'],
@@ -23,6 +31,49 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide a password'],
     minlength: 6,
     select: false
+  },
+  profileImage: {
+    type: String,
+    default: ''
+  },
+  theme: {
+    type: String,
+    enum: ['light', 'dark'],
+    default: 'light'
+  },
+  notificationSettings: {
+    email: {
+      transactions: {
+        type: Boolean,
+        default: true
+      },
+      budgetAlerts: {
+        type: Boolean,
+        default: true
+      },
+      billReminders: {
+        type: Boolean,
+        default: true
+      },
+      weeklyReports: {
+        type: Boolean,
+        default: true
+      }
+    },
+    push: {
+      transactions: {
+        type: Boolean,
+        default: true
+      },
+      budgetAlerts: {
+        type: Boolean,
+        default: true
+      },
+      billReminders: {
+        type: Boolean,
+        default: true
+      }
+    }
   },
   createdAt: {
     type: Date,

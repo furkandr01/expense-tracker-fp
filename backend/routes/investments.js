@@ -7,7 +7,7 @@ const { protect } = require('../middleware/auth');
 // @desc    Get all investments for a user
 router.get('/', protect, async (req, res) => {
   try {
-    const investments = await Investment.find({ user: req.user._id });
+    const investments = await Investment.find({ user: req.user.id });
     res.json(investments);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -29,7 +29,7 @@ router.post('/', protect, async (req, res) => {
     } = req.body;
 
     const investment = await Investment.create({
-      user: req.user._id,
+      user: req.user.id,
       title,
       amount,
       type,
@@ -55,7 +55,7 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Investment not found' });
     }
 
-    if (investment.user.toString() !== req.user._id.toString()) {
+    if (investment.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -81,11 +81,11 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Investment not found' });
     }
 
-    if (investment.user.toString() !== req.user._id.toString()) {
+    if (investment.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
-    await investment.remove();
+    await investment.deleteOne();
     res.json({ message: 'Investment removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -103,7 +103,7 @@ router.put('/:id/return', protect, async (req, res) => {
       return res.status(404).json({ message: 'Investment not found' });
     }
 
-    if (investment.user.toString() !== req.user._id.toString()) {
+    if (investment.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

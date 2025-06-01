@@ -3,12 +3,16 @@ import "./Budget.css";
 import { iconsImgs } from "../../utils/images";
 import { budget } from "../../data/data";
 import { useNavigate } from "react-router-dom";
-import { budgetService } from "../../services/api";
+import { budgetService, walletService } from "../../services/api";
 
 const Budget = () => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [cashAmount, setCashAmount] = useState(100000);
+  const [cashAmount, setCashAmount] = useState(() => {
+    // Load cash amount from localStorage on component mount
+    const saved = localStorage.getItem('cashAmount');
+    return saved ? parseFloat(saved) : 0;
+  });
   const [budgetItems, setBudgetItems] = useState(budget);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -19,6 +23,34 @@ const Budget = () => {
     isFixed: false
   });
   const [budgets, setBudgets] = useState([]);
+
+  // Save cash amount to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cashAmount', cashAmount.toString());
+    // Try to save to backend as well (when API is ready)
+    saveCashAmountToBackend(cashAmount);
+  }, [cashAmount]);
+
+  // Function to save cash amount to backend
+  const saveCashAmountToBackend = async (amount) => {
+    try {
+      await walletService.updateBalance(amount);
+    } catch (error) {
+      // If API is not available, just continue with localStorage
+      console.log('Wallet API not available, using localStorage');
+    }
+  };
+
+  // Load cash amount from backend on component mount
+  const loadCashAmountFromBackend = async () => {
+    try {
+      const response = await walletService.getBalance();
+      setCashAmount(response.data.balance || 0);
+    } catch (error) {
+      // If API is not available, use localStorage value
+      console.log('Wallet API not available, using localStorage');
+    }
+  };
 
   const handleClick = () => {
     navigate('/budget');
@@ -101,7 +133,12 @@ const Budget = () => {
 
   const handleDeleteEntry = async (id, amount, type) => {
     try {
+      console.log('Attempting to delete budget entry:', { id, amount, type });
+      console.log('budgetService methods:', Object.keys(budgetService));
+      setError(''); // Clear any previous errors
+      
       await budgetService.deleteBudget(id);
+      console.log('Budget entry deleted successfully');
       
       // Update cash amount when deleting an entry
       if (type === 'income') {
@@ -110,16 +147,42 @@ const Budget = () => {
         setCashAmount(prev => prev + amount);
       }
 
+      setMessage('Budget entry deleted successfully');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
+      
       // Refresh budgets list
       await fetchBudgets();
     } catch (error) {
-      setError('Failed to delete budget entry');
-      console.error('Error deleting budget:', error);
+      console.error('Full error object:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      
+      // More detailed error handling
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || error.response.statusText;
+        setError(`Failed to delete budget entry (${status}): ${message}`);
+      } else if (error.request) {
+        setError('Failed to delete budget entry: No response from server');
+      } else {
+        setError(`Failed to delete budget entry: ${error.message}`);
+      }
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => {
+        setError('');
+      }, 5000);
     }
   };
 
   useEffect(() => {
     fetchBudgets();
+    loadCashAmountFromBackend();
   }, []);
 
   return (
@@ -134,7 +197,7 @@ const Budget = () => {
         <h2 className="lg-value">Cash</h2>
         <span className="lg-value">₺ {cashAmount.toLocaleString()}</span>
       </div>
-      <div className="grid-c4-content bg-jet">
+      <div className="grid-c4-content bg-jet">                                  
         {/* <div className="grid-items">
           {budgetItems.map((item) => (
             <div className="grid-item" key={item.id}>

@@ -1,6 +1,6 @@
 .page-container {
     margin: auto;
-    color: black;
+    color: var(--clr-text);
   }
   
   .page-title {
@@ -8,53 +8,173 @@
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
+    color: var(--clr-text);
   }
   
   .page-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-width: 600px;
-    margin: 0 auto; 
+    gap: 24px;
+    background: var(--clr-content-bg);
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: var(--clr-text);
   }
   
   .users-info,
   .account-actions {
-    background-color: #f4f4f4; 
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: var(--clr-lightblue);
+    border-radius: 8px;
+    color: var(--clr-white);
   }
   
-  .user-info h3,
+  .users-info h3,
   .account-actions h3 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--clr-white);
+    font-weight: 600;
   }
   
-  .user-info p {
-    font-size: 1rem;
-    margin: 5px 0;
+  .users-info p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: var(--clr-white);
   }
   
   .account-button {
     display: block;
     width: 100%;
-    padding: 10px 15px;
-    margin-top: 10px;
-    font-size: 1rem;
-    background-color:var(--clr-blue); 
-    color: #fff;
+    padding: 12px;
+    margin-bottom: 12px;
+    background-color: var(--clr-darkblue);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    text-align: center;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
   }
   
   .account-button:hover {
-    background-color: var(--clr-blue); 
+    background-color: var(--clr-blue);
+  }
+  
+  .logout-button {
+    background-color: var(--clr-red);
+  }
+  
+  .logout-button:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Password Change Modal Styles */
+  .password-change-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .password-change-content {
+    width: 400px;
+    background-color: var(--clr-content-bg);
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    color: var(--clr-text);
+  }
+  
+  .password-change-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--clr-text);
+    text-align: center;
+  }
+  
+  .password-change-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  
+  .cancel-button, .change-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .cancel-button {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .cancel-button:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .change-button {
+    background-color: var(--clr-darkblue);
+    color: white;
+  }
+  
+  .change-button:hover {
+    background-color: var(--clr-blue);
+  }
+  
+  .change-button:disabled {
+    background-color: #b3d1f5;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    background-color: #ffebee;
+    color: #d32f2f;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .close-button {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: var(--clr-darkblue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 24px;
+    font-size: 16px;
+    color: var(--clr-text);
   }
   

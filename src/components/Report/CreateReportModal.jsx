@@ -1,38 +1,32 @@
 import React, { useState } from 'react';
 import { iconsImgs } from "../../utils/images";
 import "./CreateReportModal.css";
+import './ReportDetails.css';
 
 const CreateReportModal = ({ isOpen, onClose, onSubmit }) => {
-  const [selectedCategory, setSelectedCategory] = useState('loans');
-  const [chartType, setChartType] = useState('bar');
-  const [timeRange, setTimeRange] = useState('month');
-  const [manualEntry, setManualEntry] = useState(false);
-  const [budgetEntry, setBudgetEntry] = useState({
-    name: '',
-    amount: '',
-    type: 'expense'
+  const [reportData, setReportData] = useState({
+    title: '',
+    category: 'transactions',
+    chartType: 'bar',
+    timeRange: 'daily',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0]
   });
 
-  if (!isOpen) return null;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({
-      category: selectedCategory,
-      chartType,
-      timeRange,
-      manualEntry: selectedCategory === 'budget' ? manualEntry : false,
-      budgetEntry: selectedCategory === 'budget' && manualEntry ? budgetEntry : null
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setReportData({
+      ...reportData,
+      [name]: value
     });
   };
 
-  const handleBudgetEntryChange = (e) => {
-    const { name, value } = e.target;
-    setBudgetEntry(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(reportData);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
@@ -43,99 +37,83 @@ const CreateReportModal = ({ isOpen, onClose, onSubmit }) => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Select Category</label>
-            <select 
-              value={selectedCategory} 
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                if (e.target.value !== 'budget') {
-                  setManualEntry(false);
-                }
-              }}
+            <label>Report Title</label>
+            <input
+              type="text"
+              name="title"
+              value={reportData.title}
+              onChange={handleChange}
+              placeholder="E.g., June Monthly Summary, 2023 Savings..."
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Category</label>
+            <select
+              name="category"
+              value={reportData.category}
+              onChange={handleChange}
+              required
             >
-              <option value="loans">Loans</option>
-              <option value="budget">Budget</option>
               <option value="transactions">Transactions</option>
-              <option value="subscriptions">Subscriptions</option>
+              <option value="budget">Budget</option>
               <option value="savings">Savings</option>
+              <option value="loans">Loans</option>
+              <option value="subscriptions">Subscriptions</option>
             </select>
           </div>
-          
-          {selectedCategory === 'budget' && (
-            <div className="form-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={manualEntry}
-                  onChange={(e) => setManualEntry(e.target.checked)}
-                />
-                Add Manual Entry
-              </label>
-            </div>
-          )}
-
-          {selectedCategory === 'budget' && manualEntry && (
-            <>
-              <div className="form-group">
-                <label>Entry Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={budgetEntry.name}
-                  onChange={handleBudgetEntryChange}
-                  placeholder="e.g., Groceries, Rent"
-                />
-              </div>
-              <div className="form-group">
-                <label>Amount (₺)</label>
-                <input
-                  type="number"
-                  name="amount"
-                  value={budgetEntry.amount}
-                  onChange={handleBudgetEntryChange}
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-              <div className="form-group">
-                <label>Type</label>
-                <select
-                  name="type"
-                  value={budgetEntry.type}
-                  onChange={handleBudgetEntryChange}
-                >
-                  <option value="expense">Expense</option>
-                  <option value="income">Income</option>
-                </select>
-              </div>
-            </>
-          )}
-          
           <div className="form-group">
             <label>Chart Type</label>
-            <select 
-              value={chartType} 
-              onChange={(e) => setChartType(e.target.value)}
+            <select
+              name="chartType"
+              value={reportData.chartType}
+              onChange={handleChange}
+              required
             >
               <option value="bar">Bar Chart</option>
               <option value="line">Line Chart</option>
               <option value="pie">Pie Chart</option>
             </select>
           </div>
-
           <div className="form-group">
             <label>Time Range</label>
-            <select 
-              value={timeRange} 
-              onChange={(e) => setTimeRange(e.target.value)}
+            <select
+              name="timeRange"
+              value={reportData.timeRange}
+              onChange={handleChange}
+              required
             >
-              <option value="week">Last Week</option>
-              <option value="month">Last Month</option>
-              <option value="year">Last Year</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="custom">Custom Range</option>
             </select>
           </div>
-
+          {reportData.timeRange === 'custom' && (
+            <>
+              <div className="form-group">
+                <label>Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  value={reportData.startDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>End Date</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  value={reportData.endDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </>
+          )}
           <div className="modal-buttons">
             <button type="button" onClick={onClose}>Cancel</button>
             <button type="submit">Create Report</button>

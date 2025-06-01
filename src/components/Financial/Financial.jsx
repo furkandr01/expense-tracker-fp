@@ -1,44 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { iconsImgs } from "../../utils/images"
 import "./Financial.css"
 import { useNavigate } from "react-router-dom"
+import { financialService } from "../../services/api";
 
 const Financial = () => {
   const navigate = useNavigate()
   const [showAddModal, setShowAddModal] = useState(false);
-  const [adviceList, setAdviceList] = useState([
-    {
-      id: 1,
-      title: "Investment Tips",
-      frequency: "Weekly",
-      link: "https://www.investopedia.com/investing-essentials-4689754",
-      type: "investment"
-    },
-    {
-      id: 2,
-      title: "Market Analysis",
-      frequency: "Daily",
-      link: "https://www.bloomberg.com/markets",
-      type: "market"
-    },
-    {
-      id: 3,
-      title: "Personal Finance",
-      frequency: "Weekly",
-      link: "https://www.nerdwallet.com/article/finance/personal-finance-basics",
-      type: "finance"
-    },
-    {
-      id: 4,
-      title: "Cryptocurrency News",
-      frequency: "Daily",
-      link: "https://cointelegraph.com/",
-      type: "crypto"
-    }
-  ]);
+  const [adviceList, setAdviceList] = useState([]);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
   const [newAdvice, setNewAdvice] = useState({
     title: '',
-    frequency: '',
+    frequency: 'Daily',
     link: '',
     type: 'investment'
   });
@@ -60,30 +35,121 @@ const Financial = () => {
     }));
   };
 
-  const handleAddNewAdvice = (e) => {
+  const fetchFinancialAdvice = async () => {
+    setLoading(true);
+    try {
+      setError(''); // Hata mesajlarını temizle
+      console.log('Fetching financial advice data...');
+      const response = await financialService.getAdvice();
+      console.log('Fetched data:', response.data);
+      
+      if (Array.isArray(response.data)) {
+        setAdviceList(response.data);
+        if (response.data.length === 0) {
+          console.log('No financial advice data found');
+        }
+      } else {
+        console.error('Unexpected response format:', response.data);
+        setError('Received invalid data format from server');
+      }
+    } catch (error) {
+      console.error('Error fetching financial advice:', error);
+      setError('Failed to fetch financial advice: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddNewAdvice = async (e) => {
     e.preventDefault();
+    setError('');
+    setMessage('');
+
+    if (!newAdvice.title.trim()) {
+      setError('Title is required');
+      return;
+    }
+
+    if (!newAdvice.link.trim()) {
+      setError('Link is required');
+      return;
+    }
+    
+    if (!newAdvice.type) {
+      setError('Resource type is required');
+      return;
+    }
+
+    if (!newAdvice.frequency) {
+      setError('Update frequency is required');
+      return;
+    }
+
     const newAdviceData = {
-      id: Date.now(),
-      title: newAdvice.title,
+      title: newAdvice.title.trim(),
       frequency: newAdvice.frequency,
-      link: newAdvice.link,
+      link: newAdvice.link.trim(),
       type: newAdvice.type
     };
 
-    setAdviceList(prev => [...prev, newAdviceData]);
-    setNewAdvice({
-      title: '',
-      frequency: '',
-      link: '',
-      type: 'investment'
-    });
-    setShowAddModal(false);
+    try {
+      console.log('Sending data to server:', newAdviceData);
+      const response = await financialService.createAdvice(newAdviceData);
+      console.log('Server response:', response.data);
+      setMessage('Financial advice created successfully');
+      
+      // Reset form and close modal
+      setNewAdvice({
+        title: '',
+        frequency: 'Daily',
+        link: '',
+        type: 'investment'
+      });
+      setShowAddModal(false);
+
+      // Refresh advice list - add short delay to ensure data is updated on server
+      setTimeout(() => {
+        fetchFinancialAdvice();
+      }, 500);
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to create financial advice';
+      setError(errorMessage);
+      console.error('Error creating financial advice:', error);
+      console.error('Error details:', error.response?.data);
+    }
+  };
+
+  const handleDeleteAdvice = async (id) => {
+    try {
+      console.log('Deleting financial advice with ID:', id);
+      await financialService.deleteAdvice(id);
+      console.log('Successfully deleted financial advice');
+      setMessage('Financial advice deleted successfully');
+      
+      // Refresh advice list with a short delay
+      setTimeout(() => {
+        fetchFinancialAdvice();
+      }, 500);
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to delete financial advice';
+      setError(errorMessage);
+      console.error('Error deleting financial advice:', error);
+      console.error('Error details:', error.response?.data);
+    }
   };
 
   const handleLinkClick = (e, link) => {
     e.stopPropagation();
     window.open(link, '_blank');
   };
+
+  useEffect(() => {
+    // Initial data fetch when component mounts
+    fetchFinancialAdvice().catch(err => {
+      console.error('Error in initial data fetch:', err);
+      setError('Failed to load financial advice data');
+    });
+  }, []);
 
   return (
     <div className="grid-two-item grid-common grid-c8" onClick={handleClick} style={{ cursor: 'pointer' }}>
@@ -94,29 +160,49 @@ const Financial = () => {
             </button>
         </div>
         <div className="grid-c8-content">
-            <div className="grid-items">
-                {adviceList.map((advice) => (
-                    <div className="grid-item" key={advice.id}>
-                        <div className="grid-item-l">
-                            <div className="icon">
-                                <img src={ iconsImgs.check } alt="check" />
-                            </div>
-                            <div className="text text-silver-v1">
-                                <p className="text">{advice.title}</p>
-                                <p className="text-sm">{advice.frequency}</p>
-                            </div>
+            {error && <div className="error-message">{error}</div>}
+            {message && <div className="success-message">{message}</div>}
+            
+            {loading ? (
+              <div className="loading-message">Loading financial advice...</div>
+            ) : (
+              <div className="grid-items">
+                {adviceList.length === 0 ? (
+                  <div className="empty-message">No financial resources found. Add your first one!</div>
+                ) : (
+                  adviceList.map((advice) => (
+                    <div className="grid-item" key={advice._id}>
+                      <div className="grid-item-l">
+                        <div className="icon">
+                          <img src={iconsImgs.check} alt="check" />
                         </div>
-                        <div className="grid-item-r">
-                            <button 
-                                className="view-button"
-                                onClick={(e) => handleLinkClick(e, advice.link)}
-                            >
-                                <span className="text-silver-v1">View</span>
-                            </button>
+                        <div className="text text-silver-v1">
+                          <p className="text">{advice.title}</p>
+                          <p className="text-sm">{advice.frequency}</p>
                         </div>
+                      </div>
+                      <div className="grid-item-r">
+                        <button 
+                          className="view-button"
+                          onClick={(e) => handleLinkClick(e, advice.link)}
+                        >
+                          <span className="text-silver-v1">View</span>
+                        </button>
+                        <button 
+                          className="delete-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteAdvice(advice._id);
+                          }}
+                        >
+                          <img src={iconsImgs.trashbin} alt="delete" />
+                        </button>
+                      </div>
                     </div>
-                ))}
-            </div>
+                  ))
+                )}
+              </div>
+            )}
         </div>
 
         {showAddModal && (
@@ -150,7 +236,6 @@ const Financial = () => {
                                 onChange={handleNewAdviceChange}
                                 required
                             >
-                                <option value="">Select Frequency</option>
                                 <option value="Daily">Daily</option>
                                 <option value="Weekly">Weekly</option>
                                 <option value="Monthly">Monthly</option>

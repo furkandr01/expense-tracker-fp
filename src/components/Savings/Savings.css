@@ -1,50 +1,167 @@
 /* grid c6 */
+.grid-c6 {
+  overflow: hidden;
+}
+
+.grid-c6 .grid-items {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.grid-c6 .grid-item {
+  background-color: var(--clr-darkblue);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grid-c6 .grid-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
 .grid-c6 .grid-item .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   overflow: hidden;
   border-radius: 100%;
+  border: 2px solid var(--clr-lightblue);
 }
+
+.grid-c6 .grid-item .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Improve top section layout */
+.grid-c6 .grid-item-top {
+
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 10px;
+}
+
 .grid-c6 .grid-item-top-l {
   display: flex;
   align-items: center;
   column-gap: 10px;
+  flex: 1;
 }
-.grid-c6 .grid-item-top {
+
+.grid-c6 .grid-item-top-l .text {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.grid-c6 .grid-item-top-r {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-.grid-c6 .grid-item-top-r {
   font-weight: 600;
+  gap: 10px;
 }
+
+.grid-c6 .delete-button,
+.grid-c6 .add-funds-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  transition: transform 0.2s ease;
+}
+
+.grid-c6 .delete-button:hover,
+.grid-c6 .add-funds-button:hover {
+  transform: scale(1.1);
+}
+
+.grid-c6 .delete-button img,
+.grid-c6 .add-funds-button img {
+  width: 18px;
+  height: 18px;
+}
+
+.grid-c6 .add-funds-button img {
+  width: 16px;
+  height: 16px;
+  background-color: var(--clr-green);
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.grid-c6 .grid-item-bottom {
+  padding-top: 6px;
+}
+
 .grid-c6 .grid-item-badges {
   display: flex;
   flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
 }
+
 .grid-c6 .grid-item-badge {
   color: white;
-  background-color: var(--clr-blue);
+  background-color: rgba(38, 98, 162, 0.8);
   display: inline-block;
   border-radius: 16px;
-  padding: 4px 6px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  font-size: 14px;
-  margin-right: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
 }
+
+/* Progress indicator */
+.grid-c6 .progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: var(--color-silver);
+}
+
+/* Improve progress bar */
 .grid-c6 .grid-item-progress {
-  background-color: var(--clr-white);
-  height: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  height: 8px;
   border-radius: 100vh;
   margin-top: 8px;
+  overflow: hidden; /* Ensure progress doesn't overflow */
+  width: 100%;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
 .grid-c6 .grid-item-fill {
-  width: 60%;
-  height: 10px;
-  background-color: var(--clr-blue);
+  height: 8px;
+  background-color: #ff9500; /* Orange color for the progress bar */
   border-radius: 100vh;
+  transition: width 0.3s ease; /* Smooth transition for width changes */
+}
+
+/* Error and success messages */
+.grid-c6 .error-message,
+.grid-c6 .success-message {
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.grid-c6 .error-message {
+  background-color: rgba(255, 76, 76, 0.2);
+  color: #ff4c4c;
+}
+
+.grid-c6 .success-message {
+  background-color: rgba(76, 217, 100, 0.2);
+  color: #4cd964;
 }
 
 /* Modal Styles */
@@ -54,11 +171,12 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(37, 37, 37, 0.132);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
 .savingsmodal-content {
@@ -67,7 +185,7 @@
     padding: 1.5rem;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .savingsmodal-header {
@@ -75,11 +193,14 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
 }
 
 .savingsmodal-header h3 {
     color: var(--color-white);
     font-size: 1.2rem;
+    margin: 0;
 }
 
 .close-button {
@@ -89,27 +210,48 @@
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: white;
 }
 
 .savingsform-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .savingsform-group label {
     display: block;
     color: var(--color-silver);
     margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.savingsform-group p {
+    color: var(--color-silver);
+    margin: 0.5rem 0;
+    font-size: 14px;
 }
 
 .savingsform-group input[type="text"],
 .savingsform-group input[type="number"],
-.savingsform-group input[type="date"] {
+.savingsform-group input[type="date"],
+.savingsform-group select {
     width: 100%;
-    padding: 0.5rem;
-    border-radius: 4px;
+    padding: 0.7rem;
+    border-radius: 6px;
     border: 1px solid var(--clr-lightblue);
     background-color: var(--clr-lightblue);
     color: var(--color-white);
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.savingsform-group input:focus,
+.savingsform-group select:focus {
+    outline: none;
+    border-color: #ff9500;
 }
 
 .savingsmodal-buttons {
@@ -120,11 +262,12 @@
 }
 
 .savingsmodal-buttons button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
     border: none;
     cursor: pointer;
     font-weight: 500;
+    transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
 .savingsmodal-buttons button[type="button"] {
@@ -139,4 +282,9 @@
 
 .savingsmodal-buttons button:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.savingsmodal-buttons button:active {
+    transform: translateY(0);
 }

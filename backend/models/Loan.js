@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const paymentSchema = new mongoose.Schema({
+  amount: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const loanSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +49,16 @@ const loanSchema = new mongoose.Schema({
   endDate: {
     type: Date,
     required: true
+  },
+  lender: {
+    type: String,
+    default: 'Bank'
+  },
+  payments: [paymentSchema],
+  paidAmount: {
+    type: Number,
+    default: 0,
+    min: 0
   },
   status: {
     type: String,

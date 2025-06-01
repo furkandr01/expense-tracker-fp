@@ -52,11 +52,12 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(37, 37, 37, 0.132);
+    background-color: rgba(37, 37, 37, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(5px);
 }
 
 .financialmodal-content {
@@ -137,4 +138,19 @@
 
 .financialmodal-buttons button:hover {
     opacity: 0.9;
+}
+
+.loading-message,
+.empty-message {
+    padding: 1rem;
+    text-align: center;
+    color: var(--color-silver);
+    font-style: italic;
+}
+
+.empty-message {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
 }

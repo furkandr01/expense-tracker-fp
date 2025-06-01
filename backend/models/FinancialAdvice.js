@@ -23,13 +23,13 @@ const financialAdviceSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['News', 'Analysis', 'Educational'],
+    enum: ['investment', 'market', 'finance', 'crypto'],
     required: true
   },
-  createdAt: {
+  /* createdAt: {
     type: Date,
     default: Date.now
-  }
+  } */
 });
 
 module.exports = mongoose.model('FinancialAdvice', financialAdviceSchema); 

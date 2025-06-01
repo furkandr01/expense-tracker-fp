@@ -7,9 +7,7 @@
 }
 
 :root {
-  --clr-primary: #29221d;
-  --clr-primar-light: #473b33;
-  --clr-secondary: #1e1611;
+  /* Ortak renkler */
   --clr-white: #fff;
   --clr-black: #000;
   --clr-pumpkin: #fe6c00;
@@ -19,18 +17,56 @@
   --clr-scarlet-v1: rgb(254, 30, 0, 0.79);
   --clr-green: #00fe93;
   --clr-yellow: #fec80a;
-  --clr-jet: #302924;
   --clr-peach: #ffc397;
-  --clr-lightblue:#3f5a92;
-  --clr-blue:#142440;
-  --clr-darkblue:#7597f0;
-  --clr-red:#ff6636;
+  
+  /* Açık tema varsayılan */
+  --clr-primary: #29221d;
+  --clr-primar-light: #473b33;
+  --clr-secondary: #1e1611;
+  --clr-jet: #302924;
+  --clr-lightblue: #3f5a92;
+  --clr-blue: #142440;
+  --clr-darkblue: #7597f0;
+  --clr-red: #ff6636;
+  
   --font-family-bai: "Bai Jamjuree", sans-serif;
   --transition-default: all 300ms ease-in-out;
 }
 
+/* Açık tema */
+[data-theme="light"] {
+  --clr-primary: #29221d;
+  --clr-primar-light: #473b33;
+  --clr-secondary: #1e1611;
+  --clr-jet: #302924;
+  --clr-lightblue: #3f5a92;
+  --clr-blue: #142440;
+  --clr-darkblue: #7597f0;
+  --clr-red: #ff6636;
+  --clr-sidebar-bg: #142440;
+  --clr-content-bg: #f0f2f5;
+  --clr-text: #333;
+}
+
+/* Koyu tema */
+[data-theme="dark"] {
+  --clr-primary: #1a1a1a;
+  --clr-primar-light: #2d2d2d;
+  --clr-secondary: #121212;
+  --clr-jet: #1e1e1e;
+  --clr-lightblue: #2c3e50;
+  --clr-blue: #0d1520;
+  --clr-darkblue: #516c9e;
+  --clr-red: #ff6636;
+  --clr-sidebar-bg: #0d1520;
+  --clr-content-bg: #121212;
+  --clr-text: #f5f5f5;
+}
+
 body {
   font-family: var(--font-family-bai);
+  background-color: var(--clr-content-bg);
+  color: var(--clr-text);
 }
 
 ul {

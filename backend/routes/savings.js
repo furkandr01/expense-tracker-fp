@@ -7,7 +7,7 @@ const { protect } = require('../middleware/auth');
 // @desc    Get all savings for a user
 router.get('/', protect, async (req, res) => {
   try {
-    const savings = await Savings.find({ user: req.user._id });
+    const savings = await Savings.find({ user: req.user.id });
     res.json(savings);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -21,7 +21,7 @@ router.post('/', protect, async (req, res) => {
     const { title, targetAmount, deadline, category } = req.body;
 
     const savings = await Savings.create({
-      user: req.user._id,
+      user: req.user.id,
       title,
       targetAmount,
       deadline,
@@ -44,7 +44,7 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Savings goal not found' });
     }
 
-    if (savings.user.toString() !== req.user._id.toString()) {
+    if (savings.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -70,11 +70,11 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Savings goal not found' });
     }
 
-    if (savings.user.toString() !== req.user._id.toString()) {
+    if (savings.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
-    await savings.remove();
+    await savings.deleteOne();
     res.json({ message: 'Savings goal removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -92,7 +92,7 @@ router.put('/:id/add', protect, async (req, res) => {
       return res.status(404).json({ message: 'Savings goal not found' });
     }
 
-    if (savings.user.toString() !== req.user._id.toString()) {
+    if (savings.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

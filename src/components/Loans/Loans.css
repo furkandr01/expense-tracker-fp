@@ -1,7 +1,6 @@
 /* grid c7 */
 .grid-c7-content {
   margin-top: 20px;
-  background-color: var(--clr-darkblue);
   border-radius: 8px;
   padding: 16px;
 }
@@ -18,7 +17,7 @@
   justify-content: space-between;
   padding: 12px;
   margin-bottom: 12px;
-  background-color: var(--clr-lightblue);
+  background-color: var(--clr-darkblue);
   border-radius: 8px;
 }
 
@@ -287,11 +286,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(37, 37, 37, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .modal-content {

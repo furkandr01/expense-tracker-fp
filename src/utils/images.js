@@ -17,6 +17,9 @@ import trashbin from "../assets/icons/trashbin.svg";
 import user from "../assets/icons/user.svg";
 import wallet from "../assets/icons/wallet.svg";
 import wealth from "../assets/icons/wealth.svg";
+import theme from "../assets/icons/theme.svg";
+import arrowLeft from "../assets/icons/arrow-left.svg";
+import arrowRight from "../assets/icons/arrow-right.svg";
 
 // person images
 import person_one from "../assets/images/person_one.jpg";
@@ -25,7 +28,9 @@ import person_three from "../assets/images/person_three.jpg";
 import person_four from "../assets/images/person_four.jpg";
 
 export const iconsImgs = {
-    alert, bell, bills, budget, card, check, empty_check, gears, home, menu, plane, plus, report, search, trashbin, user, wallet, wealth
+    alert, bell, bills, budget, card, check, empty_check, gears, home, menu, plane, plus, report, search, trashbin, user, wallet, wealth, theme,
+    chevronLeft: arrowLeft,
+    chevronRight: arrowRight
 }
 
 export const personsImgs = {

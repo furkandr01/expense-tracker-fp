@@ -3,8 +3,7 @@ const router = express.Router();
 const Budget = require('../models/Budget');
 const { protect } = require('../middleware/auth');
 
-// @route   GET /api/budget
-// @desc    Get all budget entries for a user
+
 router.get('/', protect, async (req, res) => {
   try {
     const budgets = await Budget.find({ user: req.user._id });
@@ -14,8 +13,6 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// @route   POST /api/budget
-// @desc    Create a new budget entry
 router.post('/', protect, async (req, res) => {
   try {
     const { title, amount, type, isFixed } = req.body;
@@ -34,8 +31,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// @route   PUT /api/budget/:id
-// @desc    Update a budget entry
+
 router.put('/:id', protect, async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.id);
@@ -44,7 +40,7 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Budget entry not found' });
     }
 
-    // Check if the budget belongs to the user
+
     if (budget.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
@@ -61,8 +57,7 @@ router.put('/:id', protect, async (req, res) => {
   }
 });
 
-// @route   DELETE /api/budget/:id
-// @desc    Delete a budget entry
+
 router.delete('/:id', protect, async (req, res) => {
   try {
     const budget = await Budget.findById(req.params.id);
@@ -71,14 +66,14 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(404).json({ message: 'Budget entry not found' });
     }
 
-    // Check if the budget belongs to the user
     if (budget.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
-    await budget.remove();
+    await budget.deleteOne();
     res.json({ message: 'Budget entry removed' });
   } catch (error) {
+    console.error('Budget delete error:', error);
     res.status(400).json({ message: error.message });
   }
 });
